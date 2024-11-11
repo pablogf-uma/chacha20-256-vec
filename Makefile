@@ -34,6 +34,6 @@ calculate_throughput.o: calculate_throughput.c
 	$(CC) $(CFLAGS) calculate_throughput.c
 
 clean: 
-	cmd /C del /Q $(TARGET) $(OBJS) chacha20_v.exe
+	cmd /C del /Q $(TARGET) $(OBJS) chacha20.exe
 
 .PHONY: clean
