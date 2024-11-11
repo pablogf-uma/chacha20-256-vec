@@ -1,13 +1,13 @@
 # include <stdio.h>
 # include <stdint.h>
 # include <string.h>
-# include "chacha20_v_functions.h"
+#include "chacha20_functions_v256.h"
 # include <immintrin.h>
 
-void permute_v_state(uint32_t state[16], uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3, uint8_t keystream[64])
+void permute_v_state_v256(uint32_t state[16], uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3, uint8_t keystream[64])
 {
     // Initialize vectors
-    state_to_vectors(state, v0, v1, v2, v3);
+    state_to_vectors_v256(state, v0, v1, v2, v3);
 
     // Use of vectors for vectorized addition after the rounds
     __m128i v0_og = _mm_loadu_si128((__m128i*)v0);
@@ -17,7 +17,7 @@ void permute_v_state(uint32_t state[16], uint32_t *v0, uint32_t *v1, uint32_t *v
 
     // Perform permutations on the state: 20 total rounds (10 column-diagonal operations)
     for (int i = 0; i < 10; i++) {
-        double_whole_round(v0, v1, v2, v3);
+        double_whole_round_v256(v0, v1, v2, v3);
     }
 
     __m128i v0_permuted = _mm_loadu_si128((__m128i*)v0);
@@ -32,7 +32,7 @@ void permute_v_state(uint32_t state[16], uint32_t *v0, uint32_t *v1, uint32_t *v
     v3_permuted = _mm_add_epi32(v3_permuted, v3_og);
 
     // Load permuted vectors back into the state
-    vectors_to_state(state, v0_permuted, v1_permuted, v2_permuted, v3_permuted);
+    vectors_to_state_v256(state, v0_permuted, v1_permuted, v2_permuted, v3_permuted);
 
     // Serialize the permuted state into the output keystream
     for (size_t i = 0; i < 16; i++) {

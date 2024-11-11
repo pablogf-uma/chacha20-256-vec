@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include "chacha20_v_functions.h"
+#include "chacha20_functions_v256.h"
 #include <x86intrin.h>
 
 // Function to run a single test and measure clock cyles per byte for each test
@@ -19,7 +19,7 @@ int run_test(test_vector_t *test) {
     // Start cycle counting.
     unsigned long long start_cycles = __rdtsc();
 
-    encrypt(state, "expand 32-byte k", test->key, test->blockcount, test->nonce, v0, v1, v2, v3, test->plaintext, output);
+    encrypt_v256(state, "expand 32-byte k", test->key, test->blockcount, test->nonce, v0, v1, v2, v3, test->plaintext, output);
 
     // End cycle counting.
     unsigned long long end_cycles = __rdtsc();

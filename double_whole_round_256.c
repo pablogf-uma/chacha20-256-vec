@@ -1,6 +1,6 @@
 # include <stdio.h>
 # include <stdint.h>
-# include "chacha20_v_functions.h"
+#include "chacha20_functions_v256.h"
 # include <immintrin.h>
 
 // 128-BIT VECTORIZATION: SIMD (immintrin.h) for parallel processing contains:
@@ -53,7 +53,7 @@ void print_vector(__m128i vec) {
     printf("%08x %08x %08x %08x\n", v[0], v[1], v[2], v[3]);
 }
 
-void double_whole_round(uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3) 
+void double_whole_round_v256(uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3) 
 {
     // Load vectors into SIMD register
     __m128i v0_vec = _mm_loadu_si128((__m128i*)v0);

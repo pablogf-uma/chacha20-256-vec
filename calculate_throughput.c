@@ -1,7 +1,7 @@
 # include <stdio.h>
 # include <time.h>
 # include <string.h>
-# include "chacha20_v_functions.h"
+# include "chacha20_functions_v256.h"
 # include <windows.h>
 # include <stdlib.h>
 # include <locale.h>
@@ -122,7 +122,7 @@ void calculate_throughput_2()
         memcpy(test.plaintext, plaintext, sizeof(plaintext));
 
         // Run the encryption algorithm with the updated parameters.
-        encrypt(state, "expand 32-byte k", test.key, test.blockcount, test.nonce, v0, v1, v2, v3, test.plaintext, test.expected_ciphertext);
+        encrypt_v256(state, "expand 32-byte k", test.key, test.blockcount, test.nonce, v0, v1, v2, v3, test.plaintext, test.expected_ciphertext);
 
         // Update the number of bytes processe and the number of encrypt() calls.
         bytes_processed += 64; // Number of bytes of the plaintext.
@@ -157,14 +157,4 @@ void calculate_throughput_2()
 
     printf("Throughput: %s bytes per second.\n", throughput_buffer);
     printf("Number of chacha20 calls in 1 second: %s.\n", calls_buffer);
-}
-
-
-/*
-    This function calculates the amount of clock cycles performed by the processor per byte encrypted by the algorithm.
-*/
-
-void calculate_throughput_3()
-{
-
 }
