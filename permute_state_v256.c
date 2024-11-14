@@ -75,7 +75,7 @@ void permute_state_v256(uint32_t state1[16], uint32_t state2[16], uint32_t *v0, 
 
 
 
-    __m128i vectors2[4] = {v0_permuted, v1_permuted, v2_permuted, v3_permuted};
+    __m256i vectors2[4] = {v0_permuted, v1_permuted, v2_permuted, v3_permuted};
 
     for (int i = 0; i < 4; i++)
     {
@@ -84,10 +84,10 @@ void permute_state_v256(uint32_t state1[16], uint32_t state2[16], uint32_t *v0, 
         {
             uint32_t value;
             switch (b) {
-                case 0: value = _mm_extract_epi32(vectors2[i], 0); break;
-                case 1: value = _mm_extract_epi32(vectors2[i], 1); break;
-                case 2: value = _mm_extract_epi32(vectors2[i], 2); break;
-                case 3: value = _mm_extract_epi32(vectors2[i], 3); break;
+                case 0: value = _mm256_extract_epi32(vectors2[i], 0); break;
+                case 1: value = _mm256_extract_epi32(vectors2[i], 1); break;
+                case 2: value = _mm256_extract_epi32(vectors2[i], 2); break;
+                case 3: value = _mm256_extract_epi32(vectors2[i], 3); break;
             }
             printf("%08x", value);
         }
@@ -98,10 +98,10 @@ void permute_state_v256(uint32_t state1[16], uint32_t state2[16], uint32_t *v0, 
 
     
     for (int i = 0; i < 64; i++) {
-        printf("%02x", output_keystream[i]);
+        printf("%02x", keystream[i]);
         printf(":");
     }
     printf("\b \b");
     printf("\n");
-    */
+ */
 }

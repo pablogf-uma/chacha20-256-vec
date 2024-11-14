@@ -113,25 +113,26 @@ void double_whole_round_v256(uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t 
 
 }
 
-/*
+/* TEST
+
 int main() {
-    uint32_t v0[4] = {0x61707865, 0x3320646e, 0x79622d32, 0x6b206574};
-    uint32_t v1[4] = {0x03020100, 0x07060504, 0x0b0a0908, 0x0f0e0d0c};
-    uint32_t v2[4] = {0x13121110, 0x17161514, 0x1b1a1918, 0x1f1e1d1c};
-    uint32_t v3[4] = {0x00000001, 0x09000000, 0x4a000000, 0x00000000};
+    uint32_t v0[8] = {0x61707865, 0x3320646e, 0x79622d32, 0x6b206574, 0x61707865, 0x3320646e, 0x79622d32, 0x6b206574};
+    uint32_t v1[8] = {0x03020100, 0x07060504, 0x0b0a0908, 0x0f0e0d0c, 0x03020100, 0x07060504, 0x0b0a0908, 0x0f0e0d0c};
+    uint32_t v2[8] = {0x13121110, 0x17161514, 0x1b1a1918, 0x1f1e1d1c, 0x13121110, 0x17161514, 0x1b1a1918, 0x1f1e1d1c};
+    uint32_t v3[8] = {0x00000001, 0x09000000, 0x4a000000, 0x00000000, 0x00000002, 0x09000000, 0x4a000000, 0x00000000};
 
     for (int i = 0; i < 10; i++) {
-        double_whole_round(v0, v1, v2, v3);
+        double_whole_round_v256(v0, v1, v2, v3);
     }
 
     printf("Vector 1: ");
-    print_vector(_mm_loadu_si128((__m256i*)v0));
+    print_vector_v256(_mm256_loadu_si256((__m256i*)v0));
     printf("Vector 2: ");
-    print_vector(_mm_loadu_si128((__m256i*)v1));
+    print_vector_v256(_mm256_loadu_si256((__m256i*)v1));
     printf("Vector 3: ");
-    print_vector(_mm_loadu_si128((__m256i*)v2));
+    print_vector_v256(_mm256_loadu_si256((__m256i*)v2));
     printf("Vector 4: ");
-    print_vector(_mm_loadu_si128((__m256i*)v3));
+    print_vector_v256(_mm256_loadu_si256((__m256i*)v3));
 
     return 0;
 }

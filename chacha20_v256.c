@@ -745,11 +745,10 @@ int main()
 
     printf("%d/%d tests passed.\n", passed_tests, num_tests);
     printf("\n---------------------------------------------\n\n");
-
+    
 
     /* CALCULATE THROUGHPUT: */ 
     calculate_throughput_2();
-
 
     return 0;
 }
