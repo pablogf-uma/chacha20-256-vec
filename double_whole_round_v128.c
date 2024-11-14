@@ -1,6 +1,6 @@
 # include <stdio.h>
 # include <stdint.h>
-#include "chacha20_functions_v256.h"
+# include "chacha20_functions_v256.h"
 # include <immintrin.h>
 
 // 128-BIT VECTORIZATION: SIMD (immintrin.h) for parallel processing contains:
@@ -22,7 +22,7 @@ ROTATE_BITS:
 
 */
 
-__m128i rotate_left(__m128i v, int n) {
+__m128i rotate_left_v128(__m128i v, int n) {
     return _mm_or_si128(_mm_slli_epi32(v, n), _mm_srli_epi32(v, 32 - n));
 }
 
@@ -48,12 +48,12 @@ WHOLE_ROUND:
 
 */
 // Function to print vectors
-void print_vector(__m128i vec) {
+void print_vector_v128(__m128i vec) {
     uint32_t* v = (uint32_t*)&vec;
     printf("%08x %08x %08x %08x\n", v[0], v[1], v[2], v[3]);
 }
 
-void double_whole_round_v256(uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3) 
+void double_whole_round_v128(uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3) 
 {
     // Load vectors into SIMD register
     __m128i v0_vec = _mm_loadu_si128((__m128i*)v0);
@@ -64,19 +64,19 @@ void double_whole_round_v256(uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t 
     // First set of operations (columns):
     v0_vec = _mm_add_epi32(v0_vec, v1_vec);
     v3_vec = _mm_xor_si128(v3_vec, v0_vec);
-    v3_vec = rotate_left(v3_vec, 16);
+    v3_vec = rotate_left_v128(v3_vec, 16);
 
     v2_vec = _mm_add_epi32(v2_vec, v3_vec);
     v1_vec = _mm_xor_si128(v1_vec, v2_vec);
-    v1_vec = rotate_left(v1_vec, 12);
+    v1_vec = rotate_left_v128(v1_vec, 12);
 
     v0_vec = _mm_add_epi32(v0_vec, v1_vec);
     v3_vec = _mm_xor_si128(v3_vec, v0_vec);
-    v3_vec = rotate_left(v3_vec, 8);
+    v3_vec = rotate_left_v128(v3_vec, 8);
 
     v2_vec = _mm_add_epi32(v2_vec, v3_vec);
     v1_vec = _mm_xor_si128(v1_vec, v2_vec);
-    v1_vec = rotate_left(v1_vec, 7);
+    v1_vec = rotate_left_v128(v1_vec, 7);
 
     // Reorder elements in each vector to operate on diagonals:
     v1_vec = _mm_shuffle_epi32(v1_vec, _MM_SHUFFLE(0,3,2,1));
@@ -86,19 +86,19 @@ void double_whole_round_v256(uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t 
     // Second set of operations (diagonals):
     v0_vec = _mm_add_epi32(v0_vec, v1_vec);
     v3_vec = _mm_xor_si128(v3_vec, v0_vec);
-    v3_vec = rotate_left(v3_vec, 16);
+    v3_vec = rotate_left_v128(v3_vec, 16);
 
     v2_vec = _mm_add_epi32(v2_vec, v3_vec);
     v1_vec = _mm_xor_si128(v1_vec, v2_vec);
-    v1_vec = rotate_left(v1_vec, 12);
+    v1_vec = rotate_left_v128(v1_vec, 12);
 
     v0_vec = _mm_add_epi32(v0_vec, v1_vec);
     v3_vec = _mm_xor_si128(v3_vec, v0_vec);
-    v3_vec = rotate_left(v3_vec, 8);
+    v3_vec = rotate_left_v128(v3_vec, 8);
 
     v2_vec = _mm_add_epi32(v2_vec, v3_vec);
     v1_vec = _mm_xor_si128(v1_vec, v2_vec);
-    v1_vec = rotate_left(v1_vec, 7);
+    v1_vec = rotate_left_v128(v1_vec, 7);
   
     // Restore original order:
     v1_vec = _mm_shuffle_epi32(v1_vec, _MM_SHUFFLE(2,1,0,3));

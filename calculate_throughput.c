@@ -83,7 +83,8 @@ void calculate_throughput_2()
     uint32_t encrypt_calls = 0;
 
     // Start values for the encryption function´s parameters.
-    uint32_t state[16] = {0};
+    uint32_t state1[16] = {0};
+    uint32_t state2[16] = {0};
     uint8_t key[] = { 
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -122,7 +123,7 @@ void calculate_throughput_2()
         memcpy(test.plaintext, plaintext, sizeof(plaintext));
 
         // Run the encryption algorithm with the updated parameters.
-        encrypt_v256(state, "expand 32-byte k", test.key, test.blockcount, test.nonce, v0, v1, v2, v3, test.plaintext, test.expected_ciphertext);
+        encrypt_v256(state1, state2, "expand 32-byte k", test.key, test.blockcount, test.nonce, v0, v1, v2, v3, test.plaintext, test.expected_ciphertext);
 
         // Update the number of bytes processe and the number of encrypt() calls.
         bytes_processed += 64; // Number of bytes of the plaintext.
