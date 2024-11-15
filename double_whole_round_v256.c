@@ -47,11 +47,6 @@ WHOLE_ROUND:
     _mm256_storeu_si256((__m256i*)v1, v1_vec): Stores the values of the register back to the original arrays
 
 */
-// Function to print vectors
-void print_vector_v256(__m256i vec) {
-    uint32_t* v = (uint32_t*)&vec;
-    printf("%08x %08x %08x %08x\n", v[0], v[1], v[2], v[3]);
-}
 
 void double_whole_round_v256(uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3) 
 {
@@ -113,13 +108,23 @@ void double_whole_round_v256(uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t 
 
 }
 
-/* TEST
+/* TEST MAIN FUNCTION
+// Function declarations
+void print_vector_v256(__m256i vec);
+void double_whole_round_v256(uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3);
+__m256i rotate_left_v256(__m256i v, int n);
+
+// Function to print vectors
+void print_vector_v256(__m256i vec) {
+    uint32_t* v = (uint32_t*)&vec;
+    printf("%08x %08x %08x %08x %08x %08x %08x %08x\n", v[0], v[1], v[2], v[3]);
+}
 
 int main() {
     uint32_t v0[8] = {0x61707865, 0x3320646e, 0x79622d32, 0x6b206574, 0x61707865, 0x3320646e, 0x79622d32, 0x6b206574};
     uint32_t v1[8] = {0x03020100, 0x07060504, 0x0b0a0908, 0x0f0e0d0c, 0x03020100, 0x07060504, 0x0b0a0908, 0x0f0e0d0c};
     uint32_t v2[8] = {0x13121110, 0x17161514, 0x1b1a1918, 0x1f1e1d1c, 0x13121110, 0x17161514, 0x1b1a1918, 0x1f1e1d1c};
-    uint32_t v3[8] = {0x00000001, 0x09000000, 0x4a000000, 0x00000000, 0x00000002, 0x09000000, 0x4a000000, 0x00000000};
+    uint32_t v3[8] = {0x00000001, 0x00000000, 0x4a000000, 0x00000000, 0x00000002, 0x00000000, 0x4a000000, 0x00000000};
 
     for (int i = 0; i < 10; i++) {
         double_whole_round_v256(v0, v1, v2, v3);
@@ -135,6 +140,4 @@ int main() {
     print_vector_v256(_mm256_loadu_si256((__m256i*)v3));
 
     return 0;
-}
-
-*/
+}*/

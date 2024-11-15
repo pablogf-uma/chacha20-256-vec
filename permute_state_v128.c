@@ -63,7 +63,6 @@ void permute_state_v128(uint32_t state[16], uint32_t *v0, uint32_t *v1, uint32_t
     }
 
 
-
     __m128i vectors2[4] = {v0_permuted, v1_permuted, v2_permuted, v3_permuted};
 
     for (int i = 0; i < 4; i++)
@@ -83,9 +82,6 @@ void permute_state_v128(uint32_t state[16], uint32_t *v0, uint32_t *v1, uint32_t
         printf("\n\n");
     }
 
-
-
-    
     for (int i = 0; i < 64; i++) {
         printf("%02x", output_keystream[i]);
         printf(":");

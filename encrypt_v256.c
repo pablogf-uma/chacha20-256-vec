@@ -78,32 +78,32 @@ void encrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant
 
     // For plaintext with at least 128 bytes, 
     else {
-        // 1 iteration of this loop will processes 2 states.
-        for (int i = 0; i < number_of_blocks/2; i += 2) {
+        printf("Entering the else statement\n");
 
+        // 1 iteration of this loop will processes 2 states.
+        for (int i = 0; i < number_of_blocks; i += 2) {
+        
             // Generate the keystream for the current block
-            uint8_t keystream[64];
+            uint8_t keystream[128];
             state_init(state1, constant, key, blockcount + i, nonce);
             state_init(state2, constant, key, blockcount + 1, nonce);
-            
             permute_state_v256(state1, state2, v0, v1, v2, v3, keystream);
-            
+
             // XOR the plaintext with the keystream (vectorized version)
-            for (int j = 0; j < 64; j += 16) {
-                __m256i plaintext_v = _mm256_loadu_si256((__m256i *)&plaintext[i * 64 + j]);
+            for (int j = 0; j < 128; j += 16) {
+                __m256i plaintext_v = _mm256_loadu_si256((__m256i *)&plaintext[i * 128 + j]);
                 __m256i keystream_v = _mm256_loadu_si256((__m256i *)&keystream[j]);
                 __m256i output_v = _mm256_xor_si256(plaintext_v, keystream_v);
-                _mm256_storeu_si256((__m256i*)&output[i * 64 + j], output_v);
+                _mm256_storeu_si256((__m256i*)&output[i * 128 + j], output_v);
             }
 
-            /* TEST 
+            /* TEST
             printf("\nBlock #%d\n", i + 1);
-            for (size_t j = 0; j < 64; j++) {
-                printf("%02x", (unsigned char)output[i * 64 + j]);
+            for (size_t j = 0; j < 128; j++) {
+                printf("%02x", (unsigned char)output[i * 128 + j]);
                 printf(" ");
             }
-            printf("\n");
-            */
+            printf("\n");*/
         }
 
         // If there are remaining bytes, encrypt them (using 128-bit vectorization)
