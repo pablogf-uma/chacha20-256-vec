@@ -109,6 +109,5 @@ void permute_state_v256(uint32_t state1[16], uint32_t state2[16], uint32_t *v0, 
         printf(":");
     }
     printf("\b \b");
-    printf("\n");
+    printf("\n");*/
 }
-*/
