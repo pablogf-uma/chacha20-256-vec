@@ -9,7 +9,6 @@ int main()
     /* TEST VECTOR DEFINITION */
     test_vector_t tests[] = {
 
-        
         // Test vector 0 (RFC)
         {
             .key = { 
