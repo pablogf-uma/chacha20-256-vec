@@ -12,6 +12,7 @@ void encrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant
 
     // For plaintext smaller than 128 bytes (2 states) 128-bit vectorization is performed
     if (n_of_128_byte_blocks < 1){
+
         size_t plaintext_len = strlen(plaintext);
         size_t number_of_blocks = plaintext_len / 64;
         size_t remaining_bytes = plaintext_len % 64;
@@ -88,7 +89,7 @@ void encrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant
             permute_state_v256(state1, state2, v0, v1, v2, v3, keystream);
 
             // XOR the plaintext with the keystream (vectorized version)
-            for (int j = 0; j < 128; j += 16) {
+            for (int j = 0; j < 128; j += 32) {
                 __m256i plaintext_v = _mm256_loadu_si256((__m256i *)&plaintext[i * 128 + j]);
                 __m256i keystream_v = _mm256_loadu_si256((__m256i *)&keystream[j]);
                 __m256i output_v = _mm256_xor_si256(plaintext_v, keystream_v);
@@ -105,28 +106,24 @@ void encrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant
         }
 
         // If there are remaining bytes, encrypt them (using 128-bit vectorization)
-        if (remaining_bytes != 0) {
+        if (remaining_bytes > 0) {
 
-            // Group the remaining bytes in blocks of 16 to use 128-bit vectorization
-            size_t offset_bytes = n_of_128_byte_blocks * 128;
-            size_t n_of_64_byte_blocks = remaining_bytes / 64;
-            size_t remaining_bytes_after_64_grouping = remaining_bytes % 64;
+            uint8_t keystream[128];
+            state_init(state1, constant, key, blockcount + n_of_128_byte_blocks * 2, nonce);
+            state_init(state2, constant, key, blockcount + n_of_128_byte_blocks * 2 + 1, nonce);
+            permute_state_v256(state1, state2, v0, v1, v2, v3, keystream);
 
-            // Each block of ciphertext is 64 bytes long, each xored with a state containing a different counter value
-            for (int i = 0; i < n_of_64_byte_blocks; i++) {
+            size_t offset = n_of_128_byte_blocks * 128;
+            size_t n_of_32_byte_blocks = remaining_bytes / 32;
+            size_t final_bytes = remaining_bytes % 32;
 
-                // Generate the keystream for the current block
-                uint8_t keystream[64];
-                state_init(state1, constant, key, blockcount + (n_of_128_byte_blocks * 2) + i, nonce);
-                permute_state_v128(state1, v0, v1, v2, v3, keystream);
+            // Group the remaining bytes in chunks of 32 bytes (1 vector) to process them
+            for (int i = 0; i < n_of_32_byte_blocks; i++) {
 
-                // XOR the plaintext with the keystream (128-bit vectorized version, so group them in chunks of 16)
-                for (int j = 0; j < 64; j += 16) {
-                    __m128i plaintext_v = _mm_loadu_si128((__m128i *)&plaintext[offset_bytes + i * 64 + j]);
-                    __m128i keystream_v = _mm_loadu_si128((__m128i *)&keystream[j]);
-                    __m128i output_v = _mm_xor_si128(plaintext_v, keystream_v);
-                    _mm_storeu_si128((__m128i*)&output[offset_bytes + i * 64 + j], output_v);
-                }
+                __m256i plaintext_v = _mm256_loadu_si256((__m256i *)&plaintext[offset + i * 32]);
+                __m256i keystream_v = _mm256_loadu_si256((__m256i *)&keystream[i *32]);
+                __m256i output_v = _mm256_xor_si256(plaintext_v, keystream_v);
+                _mm256_storeu_si256((__m256i*)&output[offset + i * 32], output_v);
 
                 /* TEST
                 printf("\nBlock #%d\n", i + 1);
@@ -137,23 +134,19 @@ void encrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant
                 printf("\n");*/
             }
 
-            if (remaining_bytes_after_64_grouping != 0) {
+            if (final_bytes > 0) {
 
-                uint8_t keystream[64];
-                state_init(state1, constant, key, blockcount + (n_of_128_byte_blocks * 2) + n_of_64_byte_blocks, nonce);
-                permute_state_v128(state1, v0, v1, v2, v3, keystream);
-
-                size_t final_offset = offset_bytes + (n_of_64_byte_blocks * 64);
+                size_t final_offset = offset + (n_of_32_byte_blocks * 32);
                 
-                uint8_t temp_plaintext[64] = {0};
-                uint8_t temp_keystream[64] = {0};
+                uint8_t temp_plaintext[32] = {0};
+                uint8_t temp_keystream[32] = {0};
 
                 // Copy the remaining bytes after 64 bytes grouping to the buffer variables
-                memcpy(temp_plaintext, &plaintext[final_offset], remaining_bytes_after_64_grouping);
-                memcpy(temp_keystream, &keystream[0], remaining_bytes_after_64_grouping);
+                memcpy(temp_plaintext, &plaintext[final_offset], final_bytes);
+                memcpy(temp_keystream, &keystream[n_of_32_byte_blocks * 32], final_bytes);
 
                 // XOR the remaining bytes
-                for (size_t i = 0; i < remaining_bytes_after_64_grouping; i++) {
+                for (size_t i = 0; i < final_bytes; i++) {
                     output[final_offset + i] = temp_plaintext[i] ^ temp_keystream[i];
                 }
 
