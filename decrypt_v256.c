@@ -10,7 +10,6 @@ void decrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant
     // Calculate the number of full 128-byte blocks needed
     size_t n_blocks = (ciphertext_len + 127) / 128;
 
-
     for (size_t i = 0; i < n_blocks; i++) {
         uint8_t keystream[128];
         state_init(state1, constant, key, blockcount + i * 2, nonce);
@@ -24,7 +23,6 @@ void decrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant
         } else {
             bytes_this_block = 128;
         }
-
 
         // Process full 32-byte chunks
         size_t j;
