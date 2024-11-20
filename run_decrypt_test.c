@@ -5,7 +5,7 @@
 #include <x86intrin.h>
 
 // Function to run a single test and measure clock cyles per byte for each test
-int run_test(test_vector_t *test) {
+int run_decrypt_test(test_vector_t *test) {
     
     uint32_t state1[16];
     uint32_t state2[16];
@@ -21,6 +21,9 @@ int run_test(test_vector_t *test) {
     unsigned long long start_cycles = __rdtsc();
     
     encrypt_v256(state1, state2, "expand 32-byte k", test->key, test->blockcount, test->nonce, v0, v1, v2, v3, test->plaintext, output);
+
+    char output_plaintext[strlen(output)];
+    decrypt_v256(state1, state2, "expand 32-byte k", test->key, test->blockcount, test->nonce, v0, v1, v2, v3, output_plaintext, output);
     
     // End cycle counting.
     unsigned long long end_cycles = __rdtsc();
@@ -31,11 +34,12 @@ int run_test(test_vector_t *test) {
     printf("Total input bytes: %i", plaintext_length);
     printf("\nClock cycles per byte: %.2f\n", cycles_per_byte);
 
-    // Compare output with expected ciphertext.
-    if (memcmp(output, test->expected_ciphertext, plaintext_length) == 0) {
+    // Compare output plaintext with expected original plaintext.
+    if (memcmp(output_plaintext, test->plaintext, strlen(output)) == 0) {
         
-        return 1; // Test passed.
+        return 1;
     } else {
-        return 0; // Test failed.
+        return 0;
     }
+
 }

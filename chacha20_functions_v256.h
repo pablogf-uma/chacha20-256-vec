@@ -22,3 +22,7 @@ int run_test(test_vector_t *test);
 void calculate_throughput(test_vector_t *test);
 
 void calculate_throughput_2();
+
+void decrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant, const uint8_t key[32], uint32_t blockcount, const uint8_t nonce[12], uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3, char *plaintext, char *ciphertext);
+
+int run_decrypt_v256_test(test_vector_t *test);

@@ -213,7 +213,8 @@ int main()
         },
     };
     test_vector_t clock_cycle_tests[] = {
-                // CLOCK CYCLES PER BYTE INPUT
+                
+        // CLOCK CYCLES PER BYTE INPUT
 
         // 8 bytes
         {
@@ -742,7 +743,7 @@ int main()
     }
     printf("%d/%d tests passed.\n", passed_tests, num_tests1);
 
-    /* CLOCK CYCLES OUTPUT*/
+    /* CLOCK CYCLES OUTPUT */
     printf("\n---------------CLOCK CYCLES---------------\n\n");
     int num_tests2 = sizeof(clock_cycle_tests) / sizeof(test_vector_t);
 
@@ -751,7 +752,24 @@ int main()
         run_test(&clock_cycle_tests[i]);
         printf("\n");
     }
-    
+
+    /* DECRYPTION TESTS */
+    printf("\n---------------DECRYPTION TESTS---------------\n\n");
+    int decrypt_passed_tests = 0;
+    for (int i = 0; i < num_tests1; i++) {
+        printf("TEST VECTOR %d:\n", i);
+
+        if (run_decrypt_test(&test_vectors[i])) {
+            printf("Decryption successful for test vector %i!\n", i);
+            decrypt_passed_tests++;
+        } else {
+            printf("Decryption unsuccessful for test vector %i!\n", i);
+        }
+        printf("\n");
+    }
+    printf("%d/%d decryption tests passed.\n", decrypt_passed_tests, num_tests1);
+
+
     /* TOTAL THROUGHPUT OUTPUT */ 
     //printf("\n---------------TOTAL THROUGHPUT-----------\n\n");
     //calculate_throughput_2();
