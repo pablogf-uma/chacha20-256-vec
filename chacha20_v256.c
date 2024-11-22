@@ -734,10 +734,10 @@ int main()
         printf("TEST VECTOR %d:\n", i);
 
         if (run_test(&test_vectors[i])) {
-            printf("Passed test %i!\n", i);
+            printf("\033[0;32mPassed test %i!\033[0m\n", i);
             passed_tests++;
         } else {
-            printf("Failed test %i!\n", i);
+            printf("\033[0;31mFailed test %i!\033[0m\n", i);
         }
         printf("\n");
     }
@@ -760,10 +760,10 @@ int main()
         printf("TEST VECTOR %d:\n", i);
 
         if (run_decrypt_test(&test_vectors[i])) {
-            printf("Decryption successful for test vector %i!\n", i);
+            printf("\033[0;32mDecryption successful for test vector %i!\033[0m\n", i);
             decrypt_passed_tests++;
         } else {
-            printf("Decryption unsuccessful for test vector %i!\n", i);
+            printf("\033[0;31mDecryption for test vector %i failed.\033[0m\n", i);
         }
         printf("\n");
     }
