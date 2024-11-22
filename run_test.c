@@ -9,7 +9,7 @@ int run_test(test_vector_t *test) {
     
     uint32_t state1[16];
     uint32_t state2[16];
-    int plaintext_length = strlen(test->plaintext);
+    size_t plaintext_length = strlen(test->plaintext);
     char output[plaintext_length];
     
     uint32_t v0[8];
