@@ -41,5 +41,4 @@ int run_decrypt_test(test_vector_t *test) {
     } else {
         return 0;
     }
-
 }
