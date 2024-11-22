@@ -4,7 +4,7 @@
 #include "chacha20_functions_v256.h"
 #include <emmintrin.h>
 
-void encrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant, const uint8_t key[32], uint32_t blockcount, const uint8_t nonce[12], uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3, char *plaintext, char *output) {
+void encrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant, const uint8_t key[32], uint32_t blockcount, const uint8_t nonce[12], uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3, char *plaintext, char *ciphertext) {
     
     size_t plaintext_len = strlen(plaintext);
     // Calculate the number of full 128-byte blocks needed
@@ -29,22 +29,22 @@ void encrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant
         for (j = 0; j < bytes_this_block - (bytes_this_block % 32); j += 32) {
             __m256i plaintext_v = _mm256_loadu_si256((__m256i *)&plaintext[i * 128 + j]);
             __m256i keystream_v = _mm256_loadu_si256((__m256i *)&keystream[j]);
-            __m256i output_v = _mm256_xor_si256(plaintext_v, keystream_v);
-            _mm256_storeu_si256((__m256i*)&output[i * 128 + j], output_v);
+            __m256i ciphertext_v = _mm256_xor_si256(plaintext_v, keystream_v);
+            _mm256_storeu_si256((__m256i*)&ciphertext[i * 128 + j], ciphertext_v);
         }
 
         // Handle remaining bytes byte-by-byte
         for (; j < bytes_this_block; j++) {
-            output[i * 128 + j] = plaintext[i * 128 + j] ^ keystream[j];
+            ciphertext[i * 128 + j] = plaintext[i * 128 + j] ^ keystream[j];
         }
     }
 
     // Add null terminator
-    output[plaintext_len] = '\0';
+    ciphertext[plaintext_len] = '\0';
 
     /* TEST
     for (size_t i = 0; i < plaintext_len; i++) {
-        printf("%02x", (unsigned char)output[i]);
+        printf("%02x", (unsigned char)ciphertext[i]);
         printf(" ");
     }
     printf("\n");

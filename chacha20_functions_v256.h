@@ -13,7 +13,7 @@ void permute_state_v256(uint32_t state1[16], uint32_t state2[16], uint32_t *v0, 
 
 void vectors_to_state_v256(uint32_t state1[16], uint32_t state2[2], __m256i v0, __m256i v1, __m256i v2, __m256i v3);
 
-void encrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant, const uint8_t key[32], uint32_t blockcount, const uint8_t nonce[12], uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3, char *plaintext, char *output);
+void encrypt_v256(uint32_t state1[16], uint32_t state2[16], const char *constant, const uint8_t key[32], uint32_t blockcount, const uint8_t nonce[12], uint32_t *v0, uint32_t *v1, uint32_t *v2, uint32_t *v3, char *plaintext, char *ciphertext);
 
 typedef struct {uint8_t key[32]; uint8_t nonce[12]; uint32_t blockcount; char plaintext[100000]; char expected_ciphertext[100000];} test_vector_t;
 

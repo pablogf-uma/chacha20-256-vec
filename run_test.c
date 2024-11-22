@@ -10,7 +10,7 @@ int run_test(test_vector_t *test) {
     uint32_t state1[16];
     uint32_t state2[16];
     size_t plaintext_length = strlen(test->plaintext);
-    char output[plaintext_length];
+    char ciphertext[plaintext_length];
     
     uint32_t v0[8];
     uint32_t v1[8];
@@ -20,7 +20,7 @@ int run_test(test_vector_t *test) {
     // Start cycle counting.
     unsigned long long start_cycles = __rdtsc();
     
-    encrypt_v256(state1, state2, "expand 32-byte k", test->key, test->blockcount, test->nonce, v0, v1, v2, v3, test->plaintext, output);
+    encrypt_v256(state1, state2, "expand 32-byte k", test->key, test->blockcount, test->nonce, v0, v1, v2, v3, test->plaintext, ciphertext);
     
     // End cycle counting.
     unsigned long long end_cycles = __rdtsc();
@@ -31,8 +31,8 @@ int run_test(test_vector_t *test) {
     printf("Total input bytes: %i", plaintext_length);
     printf("\nClock cycles per byte: %.2f\n", cycles_per_byte);
 
-    // Compare output with expected ciphertext.
-    if (memcmp(output, test->expected_ciphertext, plaintext_length) == 0) {
+    // Compare ciphertext with expected ciphertext.
+    if (memcmp(ciphertext, test->expected_ciphertext, plaintext_length) == 0) {
         
         return 1; // Test passed.
     } else {
