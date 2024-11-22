@@ -3,7 +3,7 @@ CFLAGS = -mavx512f -O3 -Wall -c
 TARGET = chacha20
 OBJS = chacha20_v256.o double_whole_round_v256.o state_init.o \
        state_to_vectors_v256.o permute_state_v256.o vectors_to_state_v256.o \
-       encrypt_v256.o run_test.o calculate_throughput.o decrypt_v256.o run_decrypt_test.o
+       encrypt_v256.o run_encrypt_test.o calculate_throughput.o decrypt_v256.o run_decrypt_test.o
 
 $(TARGET): $(OBJS)
 	$(CC) $(OBJS) -mavx512f -O3 -Wall -o $(TARGET)
@@ -29,8 +29,8 @@ vectors_to_state_v256.o: vectors_to_state_v256.c
 encrypt_v256.o: encrypt_v256.c
 	$(CC) $(CFLAGS) encrypt_v256.c
 
-run_test.o: run_test.c
-	$(CC) $(CFLAGS) run_test.c
+run_encrypt_test.o: run_encrypt_test.c
+	$(CC) $(CFLAGS) run_encrypt_test.c
 
 calculate_throughput.o: calculate_throughput.c
 	$(CC) $(CFLAGS) calculate_throughput.c

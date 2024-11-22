@@ -733,7 +733,7 @@ int main()
     for (int i = 0; i < num_tests1; i++) {
         printf("TEST VECTOR %d:\n", i);
 
-        if (run_test(&test_vectors[i])) {
+        if (run_encrypt_test(&test_vectors[i])) {
             printf("\033[0;32mPassed test %i!\033[0m\n", i);
             passed_tests++;
         } else {
@@ -749,7 +749,7 @@ int main()
 
     for (int i = 0; i < num_tests2; i++) {
         printf("TEST %d:\n", i);
-        run_test(&clock_cycle_tests[i]);
+        run_encrypt_test(&clock_cycle_tests[i]);
         printf("\n");
     }
 
