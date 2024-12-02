@@ -4,9 +4,19 @@
 #include <stdlib.h>
 #include "chacha20_functions_v256.h"
 
-int main() 
-{
-    /* TEST VECTOR DEFINITION */
+extern int run_encrypt_test(test_vector_t *test_vector);
+extern int run_decrypt_test(test_vector_t *test_vector);
+void print_usage() {
+    printf("Chacha20 Options:\n");
+    printf("  *default*             All tests\n");
+    printf("  --enc-tv N            Encrypt test vector N\n");
+    printf("  --dec-tv N            Decrypt test vector N\n");
+    printf("  --clock-ct N          Run clock cycles test\n");
+    printf("  --enc-ci              Encrypt custom input\n");
+    printf("  --dec-ci              Decrypt custom input\n");
+}
+
+/* TEST VECTOR DEFINITION*/ 
     test_vector_t test_vectors[] = {
 
 
@@ -726,53 +736,85 @@ int main()
     
     };
 
-    /* TEST VECTOR OUTPUT*/
-    printf("\n---------------TEST VECTORS---------------\n\n");
-    int num_tests1 = sizeof(test_vectors) / sizeof(test_vector_t); // Size of tests in bytes/size of one test_vector
-    int passed_tests = 0;
-    for (int i = 0; i < num_tests1; i++) {
-        printf("TEST VECTOR %d:\n", i);
+int main(int argc, char *argv[]) {
+    int run_all_tests = 1;
+    int run_enc_test_vector = 0;
+    int run_dec_test_vector = 0;
+    int run_clock_cycle_test = 0;
+    int test_vector_index = -1;
+    int run_enc_custom_input = 0;
+    int run_dec_custom_input = 0;
 
-        if (run_encrypt_test(&test_vectors[i])) {
-            printf("\033[0;32mPassed test %i!\033[0m\n", i);
-            passed_tests++;
+    if (strcmp(argv[1], "--enc-tv") == 0) {
+        run_enc_test_vector++;
+        run_all_tests = 0;
+        test_vector_index = atoi(argv[2]);
+
+    } else if (strcmp(argv[1], "--dec-tv") == 0) {
+        run_dec_test_vector++;
+        run_all_tests = 0;
+        test_vector_index = atoi(argv[2]);
+
+    } else if (strcmp(argv[1], "--clock-ct") == 0) {
+        run_clock_cycle_test++;
+        run_all_tests = 0;
+        test_vector_index = atoi(argv[2]);
+
+    } else if (strcmp(argv[1], "--enc-ci") == 0) {
+        run_enc_custom_input++;
+        run_all_tests = 0;
+
+    } else if (strcmp(argv[1], "--dec-ci") == 0) {
+        run_dec_custom_input++;
+        run_all_tests = 0;
+
+    } else {
+        print_usage();
+        return 1;
+    }
+    
+
+    if (run_all_tests || run_enc_test_vector) {
+
+        printf("TEST VECTOR %d:\n", test_vector_index);
+        if (run_encrypt_test(&test_vectors[test_vector_index])) {
+            printf("\033[0;32mEncryption successful for test vector %i!\033[0m\n", test_vector_index);
         } else {
-            printf("\033[0;31mFailed test %i!\033[0m\n", i);
+            printf("\033[0;31mEncryption for test vector %i failed.\033[0m\n", test_vector_index);
         }
         printf("\n");
     }
-    printf("%d/%d tests passed.\n", passed_tests, num_tests1);
 
-    /* CLOCK CYCLES OUTPUT */
-    printf("\n---------------CLOCK CYCLES---------------\n\n");
-    int num_tests2 = sizeof(clock_cycle_tests) / sizeof(test_vector_t);
+    if (run_all_tests || run_dec_test_vector) {
 
-    for (int i = 0; i < num_tests2; i++) {
-        printf("TEST %d:\n", i);
-        run_encrypt_test(&clock_cycle_tests[i]);
-        printf("\n");
-    }
-
-    /* DECRYPTION TESTS */
-    printf("\n---------------DECRYPTION TESTS---------------\n\n");
-    int decrypt_passed_tests = 0;
-    for (int i = 0; i < num_tests1; i++) {
-        printf("TEST VECTOR %d:\n", i);
-
-        if (run_decrypt_test(&test_vectors[i])) {
-            printf("\033[0;32mDecryption successful for test vector %i!\033[0m\n", i);
-            decrypt_passed_tests++;
+        printf("TEST VECTOR %d:\n", test_vector_index);
+        if (run_decrypt_test(&test_vectors[test_vector_index])) {
+            printf("\033[0;32mDecryption successful for test vector %i!\033[0m\n", test_vector_index);
         } else {
-            printf("\033[0;31mDecryption for test vector %i failed.\033[0m\n", i);
+            printf("\033[0;31mDecryption for test vector %i failed.\033[0m\n", test_vector_index);
         }
         printf("\n");
     }
-    printf("%d/%d decryption tests passed.\n", decrypt_passed_tests, num_tests1);
 
+    if (run_all_tests || run_clock_cycle_test) {
 
-    /* TOTAL THROUGHPUT OUTPUT */ 
-    //printf("\n---------------TOTAL THROUGHPUT-----------\n\n");
-    //calculate_throughput_2();
+        printf("CLOCK CYCLE TEST %d:\n", test_vector_index + 1);
+        run_encrypt_test(&clock_cycle_tests[test_vector_index]);
+        printf("\n");
+    }
+
+    if (run_enc_custom_input) {
+
+        char ciphertext[256];
+        encrypt_custom_input(ciphertext);
+        
+    }
+
+    if (run_dec_custom_input) {
+
+        char plaintext[256];
+        decrypt_custom_input(plaintext);
+    }
 
     return 0;
 }
