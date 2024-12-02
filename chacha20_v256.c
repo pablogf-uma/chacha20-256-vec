@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include "chacha20_functions_v256.h"
 
-extern int run_encrypt_test(test_vector_t *test_vector);
-extern int run_decrypt_test(test_vector_t *test_vector);
 void print_usage() {
     printf("Chacha20 Options:\n");
     printf("  *default*             All tests\n");
