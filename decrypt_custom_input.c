@@ -3,6 +3,9 @@
 #include <string.h>
 #include "chacha20_functions_v256.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result" // To ignore the fgets warning for not usign its output
+
 void decrypt_custom_input(char *plaintext)
 {
     uint32_t state1[16];
@@ -68,3 +71,5 @@ void decrypt_custom_input(char *plaintext)
     printf("%s", plaintext);
     printf("\n");
 }
+
+#pragma GCC diagnostic pop

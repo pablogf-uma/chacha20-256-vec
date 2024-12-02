@@ -28,7 +28,7 @@ int run_encrypt_test(test_vector_t *test) {
     // Calculate cycles per byte
     unsigned long long cycles = end_cycles - start_cycles;   
     double cycles_per_byte = (double)cycles / plaintext_length;
-    printf("Total input bytes: %i", plaintext_length);
+    printf("Total input bytes: %li", plaintext_length);
     printf("\nClock cycles per byte: %.2f\n", cycles_per_byte);
 
     // Compare ciphertext with expected ciphertext.

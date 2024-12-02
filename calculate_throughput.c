@@ -2,9 +2,11 @@
 # include <time.h>
 # include <string.h>
 # include "chacha20_functions_v256.h"
-# include <windows.h>
 # include <stdlib.h>
 # include <locale.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 // Function to format numbers with commas
 void format_number_with_commas(char *buffer, size_t buffer_size, int number) {

@@ -1,3 +1,10 @@
+# Detect the Operating System
+ifeq ($(OS),Windows_NT)
+    DEL = cmd /C del /Q
+else
+    DEL = rm -f
+endif
+
 CC = gcc
 CFLAGS = -mavx512f -O3 -Wall -c
 TARGET = chacha20
@@ -49,6 +56,6 @@ decrypt_custom_input.o: decrypt_custom_input.c
 	$(CC) $(CFLAGS) decrypt_custom_input.c
 
 clean: 
-	cmd /C del /Q $(TARGET) $(OBJS) chacha20.exe
+	$(DEL) $(TARGET) $(OBJS) chacha20.exe
 
 .PHONY: clean
