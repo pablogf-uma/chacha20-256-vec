@@ -9,7 +9,7 @@ int run_decrypt_test(test_vector_t *test) {
     
     uint32_t state1[16];
     uint32_t state2[16];
-    int plaintext_length = strlen(test->plaintext);
+    unsigned long plaintext_length = strlen(test->plaintext);
     char ciphertext[plaintext_length];
     
     uint32_t v0[8];
@@ -31,7 +31,7 @@ int run_decrypt_test(test_vector_t *test) {
     // Calculate cycles per byte
     unsigned long long cycles = end_cycles - start_cycles;   
     double cycles_per_byte = (double)cycles / plaintext_length;
-    printf("Total input bytes: %zu", plaintext_length);
+    printf("Total input bytes: %lu", plaintext_length);
     printf("\nClock cycles per byte: %.2f\n", cycles_per_byte);
 
     // Compare output plaintext with expected original plaintext.
