@@ -1,0 +1,41 @@
+name: Windows Environment Execution
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  run-on-windows:
+    runs-on: windows-latest
+
+    steps:
+      # Check out the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Install MinGW using Chocolatey
+      - name: Install MinGW
+        run: |
+          choco install mingw -y
+      # Add MinGW to PATH using CMD
+      - name: Add MinGW to PATH
+        run: |
+          setx PATH "%PATH%;C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin"
+      # Debug - Verify MinGW installation
+      - name: Verify MinGW
+        run: |
+          gcc --version
+          mingw32-make --version
+      # Build the project
+      - name: Build the project
+        run: |
+          mingw32-make
+      # Run the program
+      - name: Run the program
+        run: |
+          ./chacha20 --all-tests
