@@ -5,7 +5,7 @@ setlocal enabledelayedexpansion
 set runs=100
 
 :: Output CSV file
-set csv_file=benchmarking_chacha20_v128.csv
+set csv_file=generated_results.csv
 
 :: Initialize CSV file
 echo Initializing CSV file: %csv_file%

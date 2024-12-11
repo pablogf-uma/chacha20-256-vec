@@ -35,28 +35,25 @@ void permute_state_v256(uint32_t state1[16], uint32_t state2[16], uint32_t *v0, 
     vectors_to_state_v256(state1, state2, v0_permuted, v1_permuted, v2_permuted, v3_permuted);
 
     // Serialize the permuted state1 into the output keystream
-    for (size_t i = 0; i < 16; i++) {
-        uint32_t word1 = state1[i];
-        keystream[i * 4] = (word1 >> 0)  & 0xFF;
-        keystream[i * 4 + 1] = (word1 >> 8)  & 0xFF;
-        keystream[i * 4 + 2] = (word1 >> 16) & 0xFF;
-        keystream[i * 4 + 3] = (word1 >> 24) & 0xFF;
+    for (size_t i = 0; i < 16; i += 8) {
+        __m256i vec1 = _mm256_loadu_si256((__m256i*)&state1[i]);
+        uint8_t temp[32];
+        _mm256_storeu_si256((__m256i*)temp, vec1);
 
-        // Inline assembly statement that acts as memory barrier
-        // This prevents the compiler from reordering the writes to output_keystream, 
-        //      ensuring that the loop performs as expected even under -O3 optimizer.
-        __asm__ __volatile__("" ::: "memory"); 
+        for (int j = 0; j < 32; j++) {
+            keystream[i * 4 + j] = temp[j];
+        }
     }
 
     // Serialize permuted state2
-    for (size_t i = 0; i < 16; i++) {
-        uint32_t word2 = state2[i];
-        keystream[i * 4 + 64] = (word2 >> 0)  & 0xFF; // Add 16 to jump over the already created elements of the keystream
-        keystream[i * 4 + 1 + 64] = (word2 >> 8)  & 0xFF;
-        keystream[i * 4 + 2 + 64] = (word2 >> 16) & 0xFF;
-        keystream[i * 4 + 3 + 64] = (word2 >> 24) & 0xFF;
+    for (size_t i = 0; i < 16; i += 8) {
+        __m256i vec2 = _mm256_loadu_si256((__m256i*)&state2[i]);
+        uint8_t temp[32];
+        _mm256_storeu_si256((__m256i*)temp, vec2);
 
-        __asm__ __volatile__("" ::: "memory"); 
+        for (int j = 0; j < 32; j++) {
+            keystream[i * 4 + j + 64] = temp[j];
+        }
     }
 
     /*
