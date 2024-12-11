@@ -6,7 +6,7 @@
 
 void print_usage() {
     printf("Chacha20 Options:\n");
-    printf("  *default*             All tests\n");
+    printf("  --all-tests             All tests\n");
     printf("  --enc-tv N            Encrypt test vector N\n");
     printf("  --dec-tv N            Decrypt test vector N\n");
     printf("  --clock-ct N          Run clock cycles test\n");
