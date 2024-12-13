@@ -31,29 +31,15 @@ void permute_state_v256(uint32_t state1[16], uint32_t state2[16], uint32_t *v0, 
     v2_permuted = _mm256_add_epi32(v2_permuted, v2_og);
     v3_permuted = _mm256_add_epi32(v3_permuted, v3_og);
 
-    // Load permuted vectors back into the state
-    vectors_to_state_v256(state1, state2, v0_permuted, v1_permuted, v2_permuted, v3_permuted);
+    // Serialize the vectors into the keystream using 128-bit vectorization
+    __m256i permuted_vectors[4] = {v0_permuted, v1_permuted, v2_permuted, v3_permuted};
 
-    // Serialize the permuted state1 into the output keystream
-    for (size_t i = 0; i < 16; i += 8) {
-        __m256i vec1 = _mm256_loadu_si256((__m256i*)&state1[i]);
-        uint8_t temp[32];
-        _mm256_storeu_si256((__m256i*)temp, vec1);
+    for (size_t i = 0; i < 4; i++) { 
+        __m128i state1_half = _mm256_extracti128_si256(permuted_vectors[i], 0); // Extract the lower 128 bits (state 1's row)
+        __m128i state2_half = _mm256_extracti128_si256(permuted_vectors[i], 1); // Extract the higher 128 bits (state 2's row)
 
-        for (int j = 0; j < 32; j++) {
-            keystream[i * 4 + j] = temp[j];
-        }
-    }
-
-    // Serialize permuted state2
-    for (size_t i = 0; i < 16; i += 8) {
-        __m256i vec2 = _mm256_loadu_si256((__m256i*)&state2[i]);
-        uint8_t temp[32];
-        _mm256_storeu_si256((__m256i*)temp, vec2);
-
-        for (int j = 0; j < 32; j++) {
-            keystream[i * 4 + j + 64] = temp[j];
-        }
+        _mm_storeu_si128((__m128i*)&keystream[i * 16], state1_half); // Store vectors into the keystream 128-bits at a time (1st state)
+        _mm_storeu_si128((__m128i*)&keystream[i * 16 + 64], state2_half); // 2nd state
     }
 
     /*
