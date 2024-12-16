@@ -38,4 +38,4 @@ jobs:
       # Run the program
       - name: Run the program
         run: |
-          ./chacha20 --all-tests
+          ./clock_cycles_tests.bat
