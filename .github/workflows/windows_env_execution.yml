@@ -38,4 +38,10 @@ jobs:
       # Run the program
       - name: Run the program
         run: |
-          ./chacha20 --all-tests
+          ./clock_cycles_tests.bat
+      # Save results as artifact
+      - name: Upload results as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: generated-results
+          path: generated_results.csv
