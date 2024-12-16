@@ -43,5 +43,5 @@ jobs:
       - name: Upload results as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: generated-results
-          path: generated_results.csv
+          name: generated_results_github_actions
+          path: generated_results_github_actions.csv
