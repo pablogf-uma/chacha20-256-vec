@@ -782,13 +782,13 @@ int main(int argc, char *argv[]) {
         int num_tests1 = sizeof(test_vectors) / sizeof(test_vector_t); // Size of tests in bytes/size of one test_vector
         int passed_tests = 0;
         for (int i = 0; i < num_tests1; i++) {
-            printf("TEST VECTOR %d:\n", i);
+            printf("TEST VECTOR %d:\n", i + 1);
 
             if (run_encrypt_test(&test_vectors[i])) {
-                printf("\033[0;32mPassed test %i!\033[0m\n", i);
+                printf("\033[0;32mPassed test %i!\033[0m\n", i + 1);
                 passed_tests++;
             } else {
-                printf("\033[0;31mFailed test %i!\033[0m\n", i);
+                printf("\033[0;31mFailed test %i!\033[0m\n", i + 1);
             }
             printf("\n");
         }
@@ -798,13 +798,13 @@ int main(int argc, char *argv[]) {
         printf("\n---------------DECRYPTION TESTS---------------\n\n");
         int decrypt_passed_tests = 0;
         for (int i = 0; i < num_tests1; i++) {
-            printf("TEST VECTOR %d:\n", i);
+            printf("TEST VECTOR %d:\n", i + 1);
 
             if (run_decrypt_test(&test_vectors[i])) {
-                printf("\033[0;32mDecryption successful for test vector %i!\033[0m\n", i);
+                printf("\033[0;32mDecryption successful for test vector %i!\033[0m\n", i + 1);
                 decrypt_passed_tests++;
             } else {
-                printf("\033[0;31mDecryption for test vector %i failed.\033[0m\n", i);
+                printf("\033[0;31mDecryption for test vector %i failed.\033[0m\n", i + 1);
             }
             printf("\n");
         }
@@ -826,9 +826,9 @@ int main(int argc, char *argv[]) {
 
         printf("TEST VECTOR %d:\n", test_vector_index + 1);
         if (run_encrypt_test(&test_vectors[test_vector_index])) {
-            printf("\033[0;32mEncryption successful for test vector %i!\033[0m\n", test_vector_index);
+            printf("\033[0;32mEncryption successful for test vector %i!\033[0m\n", test_vector_index + 1);
         } else {
-            printf("\033[0;31mEncryption for test vector %i failed.\033[0m\n", test_vector_index);
+            printf("\033[0;31mEncryption for test vector %i failed.\033[0m\n", test_vector_index + 1);
         }
         printf("\n");
     }
@@ -837,9 +837,9 @@ int main(int argc, char *argv[]) {
 
         printf("TEST VECTOR %d:\n", test_vector_index + 1);
         if (run_decrypt_test(&test_vectors[test_vector_index])) {
-            printf("\033[0;32mDecryption successful for test vector %i!\033[0m\n", test_vector_index);
+            printf("\033[0;32mDecryption successful for test vector %i!\033[0m\n", test_vector_index + 1);
         } else {
-            printf("\033[0;31mDecryption for test vector %i failed.\033[0m\n", test_vector_index);
+            printf("\033[0;31mDecryption for test vector %i failed.\033[0m\n", test_vector_index + 1);
         }
         printf("\n");
     }
