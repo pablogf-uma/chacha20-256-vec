@@ -9,7 +9,7 @@ int run_encrypt_test(test_vector_t *test) {
     
     uint32_t state1[16];
     uint32_t state2[16];
-    unsigned long plaintext_length = strlen(test->plaintext);
+    unsigned long plaintext_length = test->plaintext_length;
     char ciphertext[plaintext_length];
     
     uint32_t v0[8];
@@ -20,7 +20,7 @@ int run_encrypt_test(test_vector_t *test) {
     // Start cycle counting.
     unsigned long long start_cycles = __rdtsc();
     
-    encrypt_v256(state1, state2, "expand 32-byte k", test->key, test->blockcount, test->nonce, v0, v1, v2, v3, test->plaintext, ciphertext);
+    encrypt_v256(state1, state2, "expand 32-byte k", test->key, test->blockcount, test->nonce, v0, v1, v2, v3, test->plaintext, ciphertext, plaintext_length);
     
     // End cycle counting.
     unsigned long long end_cycles = __rdtsc();
