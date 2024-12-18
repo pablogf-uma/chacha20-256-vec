@@ -44,11 +44,6 @@ jobs:
         run: |
           ./clock_cycles_tests.bat
 
-      # Debug - List workspace files
-      - name: Debug - List workspace files
-        run: |
-          dir /s
-
       # Save results as artifact
       - name: Upload results as artifact
         uses: actions/upload-artifact@v3
