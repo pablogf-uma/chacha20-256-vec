@@ -19,6 +19,8 @@ These resources were used throughout the development of the project outlined abo
 
 - [Paper](https://eprint.iacr.org/2013/759.pdf): Original research paper on ChaCha20 by Daniel J. Bernstein.
 - [RFC 8439](https://www.rfc-editor.org/rfc/rfc8439#section-2.1.1): Standardized specification of ChaCha20 and its use in internet protocols.
+- [SIMD Programming Blog entry](https://dennisrants.substack.com/p/how-to-simd-programming)
+
 
 ---
 
