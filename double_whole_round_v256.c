@@ -28,7 +28,7 @@ __m256i rotate_left_v256(__m256i v, int n) {
 
 /*
 
-WHOLE_ROUND:
+DOUBLE_WHOLE_ROUND:
 
 - Does the job of 4 consecutive operations in the previous chacha into 1
 
