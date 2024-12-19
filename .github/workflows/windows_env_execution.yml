@@ -22,31 +22,30 @@ jobs:
       - name: Install MinGW
         run: |
           choco install mingw -y
-
       # Add MinGW to PATH using CMD
       - name: Add MinGW to PATH
         run: |
           setx PATH "%PATH%;C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin"
-
       # Debug - Verify MinGW installation
       - name: Verify MinGW
         run: |
           gcc --version
           mingw32-make --version
-
       # Build the project
       - name: Build the project
         run: |
           mingw32-make
-
-      # Run the program
+      # Run the program (which should generate the CSV file)
       - name: Run the program
         run: |
           ./clock_cycles_tests.bat
+      # Debug - List the files in the workspace to verify CSV location
+      - name: List files in the workspace
+        run: dir
 
-      # Save results as artifact
-      - name: Upload results as artifact
-        uses: actions/upload-artifact@v3
+      # Upload the CSV file as an artifact
+      - name: Upload CSV artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: generated_results_github_actions
-          path: "**/generated_results_github_actions.csv"
+          name: csv-output
+          path: generated_results.csv
